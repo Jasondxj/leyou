@@ -1,5 +1,7 @@
 package com.leyou.item.web;
 
+import com.leyou.common.enums.ExceptionEnum;
+import com.leyou.common.exception.LyException;
 import com.leyou.item.pojo.Item;
 import com.leyou.item.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ public class ItemController {
         System.out.println(12);
         //校验价格
         if (item.getPrice() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            throw new LyException(ExceptionEnum.PRINCE_CANNOT_BE_NULL);
         }
         item = itemService.saveItem(item);
         return ResponseEntity.status(HttpStatus.CREATED).body(item);
