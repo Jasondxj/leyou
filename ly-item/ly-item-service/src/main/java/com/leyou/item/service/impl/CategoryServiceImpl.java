@@ -27,4 +27,9 @@ public class CategoryServiceImpl implements ICategoryService{
         }
         return list;
     }
+
+    @Override
+    public List<Category> queryByBrandId(Long bid) {
+        return this.categoryMapper.queryByBrandId(bid);
+    }
 }
