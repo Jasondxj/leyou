@@ -8,4 +8,6 @@ import java.util.List;
 public interface IGoodsService {
     public PageResult<Spu> querySpuByPage(Integer page, Integer rows, Boolean saleable, String key);
     public void loadCategoryAndBrandName(List<Spu> spus);
+
+    public void savaGood(Spu spu);
 }

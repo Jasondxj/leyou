@@ -15,4 +15,6 @@ public interface ISpecificationService {
     public void addParam(SpecParam specParam);
 
     public void deleteGroup(Long id);
+
+    public List<SpecParam> queryParamList(Long gid, Long cid, Boolean searching);
 }

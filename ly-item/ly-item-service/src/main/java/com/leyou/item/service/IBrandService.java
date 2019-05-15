@@ -10,4 +10,6 @@ public interface IBrandService {
 
     public void saveBrand(Brand brand, List<Long> cids);
     public Brand queryById(Long id);
+
+    public List<Brand> queryBrandByCid(Long cid);
 }

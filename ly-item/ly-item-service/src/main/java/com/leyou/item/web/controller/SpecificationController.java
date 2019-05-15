@@ -4,6 +4,8 @@ import com.leyou.item.pojo.SpecGroup;
 import com.leyou.item.pojo.SpecParam;
 import com.leyou.item.service.ISpecificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,13 +28,17 @@ public class SpecificationController {
     }
 
     /**
-     * 根据组id查询参数
+     * 查询参数的集合
      * @param gid
      * @return
      */
     @GetMapping("params")
-    public ResponseEntity<List<SpecParam>> queryParamByGid(@RequestParam("gid")Long gid){
-        return ResponseEntity.ok(specificationService.queryParamByGid(gid));
+    public ResponseEntity<List<SpecParam>> queryParamList(
+            @RequestParam(value = "gid",required = false)Long gid,
+            @RequestParam(value = "cid",required = false)Long cid,
+            @RequestParam(value = "searching",required = false)Boolean searching
+    ){
+        return ResponseEntity.ok(specificationService.queryParamList(gid,cid,searching));
     }
 
     /**
@@ -44,7 +50,7 @@ public class SpecificationController {
     @PostMapping("group")
     public ResponseEntity<Void> addGroup(@RequestParam("cid")Long cid,@RequestParam("name")String name){
         specificationService.addGroup(name,cid);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -55,7 +61,7 @@ public class SpecificationController {
     @PostMapping("param")
     public ResponseEntity<Void> addParam(SpecParam specParam){
         specificationService.addParam(specParam);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**

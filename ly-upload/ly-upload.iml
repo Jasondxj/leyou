@@ -49,6 +49,10 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.0.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: net.coobird:thumbnailator:0.4.8" level="project" />
     <orderEntry type="module" module-name="ly-common" />
+    <orderEntry type="library" name="Maven: tk.mybatis:mapper-base:1.0.4" level="project" />
+    <orderEntry type="library" name="Maven: tk.mybatis:mapper-extra:1.0.4" level="project" />
+    <orderEntry type="library" name="Maven: tk.mybatis:mapper-core:1.0.4" level="project" />
+    <orderEntry type="library" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:5.0.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat.embed:tomcat-embed-core:8.5.32" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-annotations-api:8.5.32" level="project" />

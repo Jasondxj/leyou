@@ -19,7 +19,8 @@ public enum ExceptionEnum {
     GROUP_SAVE_ERROR(500,"新增规格组失败" ),
     PARAM_SAVE_ERROR(500,"新增参数失败" ),
     GROUP_DELETE_ERROR(500,"规格组删除失败" ),
-    GOODS_NOT_FOUND(404,"商品不存在" );
+    GOODS_NOT_FOUND(404,"商品不存在" ),
+    GOOD_ADD_ERROR(500,"新增商品失败" );
     private int code;
     private String msg;
 }
