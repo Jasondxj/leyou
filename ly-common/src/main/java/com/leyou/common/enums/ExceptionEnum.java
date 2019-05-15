@@ -20,7 +20,12 @@ public enum ExceptionEnum {
     PARAM_SAVE_ERROR(500,"新增参数失败" ),
     GROUP_DELETE_ERROR(500,"规格组删除失败" ),
     GOODS_NOT_FOUND(404,"商品不存在" ),
-    GOOD_ADD_ERROR(500,"新增商品失败" );
+    GOODS_DETAIL_NOT_FOUND(500,"商品不存在" ),
+    GOODS_SKU_NOT_FOUND(500,"商品SKU不存在" ),
+    GOODS_STOCK_NOT_FOUND(500,"商品库存不存在" ),
+    GOOD_ADD_ERROR(500,"新增商品失败" ),
+    GOOD_ID_ERROR(400,"商品ID不能为空" ),
+    GOOD_UPDATE_ERROR(500,"新增修改失败" );
     private int code;
     private String msg;
 }
