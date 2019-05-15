@@ -38,7 +38,6 @@ public class BrandController {
     }
     @PostMapping
     public ResponseEntity<Void> saveBrand(Brand brand,@RequestParam("cids") List<Long> cids){
-        System.out.println(12);
         brandService.saveBrand(brand,cids);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

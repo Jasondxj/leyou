@@ -63,4 +63,13 @@ public class BrandServiceImpl implements IBrandService {
             }
         }
     }
+
+    @Override
+    public Brand queryById(Long id) {
+        Brand brand = brandMapper.selectByPrimaryKey(id);
+        if (brand==null){
+            throw new LyException(ExceptionEnum.BRAND_NOT_FOUND);
+        }
+        return brand;
+    }
 }

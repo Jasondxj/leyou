@@ -9,4 +9,5 @@ public interface IBrandService {
     public PageResult<Brand> queryBypage(Integer page, Integer rows, String sortBy, Boolean desc, String key);
 
     public void saveBrand(Brand brand, List<Long> cids);
+    public Brand queryById(Long id);
 }

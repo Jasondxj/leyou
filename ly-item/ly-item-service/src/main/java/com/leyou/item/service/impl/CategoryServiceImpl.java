@@ -32,4 +32,13 @@ public class CategoryServiceImpl implements ICategoryService{
     public List<Category> queryByBrandId(Long bid) {
         return this.categoryMapper.queryByBrandId(bid);
     }
+
+    @Override
+    public List<Category> queryByIds(List<Long> ids) {
+        List<Category> list = categoryMapper.selectByIdList(ids);
+        if (CollectionUtils.isEmpty(list)){
+            throw new LyException(ExceptionEnum.CATEGORY_NOT_FOUND);
+        }
+        return list;
+    }
 }
