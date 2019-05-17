@@ -12,4 +12,6 @@ public interface IBrandService {
     public Brand queryById(Long id);
 
     public List<Brand> queryBrandByCid(Long cid);
+
+    public List<Brand> queryByIds(List<Long> ids);
 }
