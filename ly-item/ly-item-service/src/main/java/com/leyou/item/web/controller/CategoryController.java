@@ -48,5 +48,12 @@ public class CategoryController {
     @GetMapping("list/ids")
     public ResponseEntity<List<Category>> queryCategoryByIds(@RequestParam("ids")List<Long> ids){
         return ResponseEntity.ok(categoryService.queryByIds(ids));
+//        List<String> nameList = this.categoryService.queryCategoryNameByCids(ids);
+//
+//        if (nameList==null||nameList.size()==0){
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//
+//        return ResponseEntity.ok(nameList);
     }
 }

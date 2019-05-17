@@ -5,12 +5,13 @@ import com.leyou.item.pojo.Sku;
 import com.leyou.item.pojo.SpuDetail;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-
+@Repository
 @FeignClient("item-service")
 public interface GoodsClient extends GoodsApi{
 

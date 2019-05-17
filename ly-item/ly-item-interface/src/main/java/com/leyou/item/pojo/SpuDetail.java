@@ -1,5 +1,6 @@
 package com.leyou.item.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.Id;

@@ -20,7 +20,10 @@ public class CategoryClientTest {
 
     @Test
     public void queryCategoryByIds() {
-        List<Category> list = categoryClient.queryCategoryByIds(Arrays.asList(1L, 2L, 3L));
+        List<Category> list = categoryClient.queryCategoryByIds(Arrays.asList(74L, 75L, 76L));
         Assert.assertEquals(3,list.size());//断言
+        for (Category category : list) {
+            System.out.println(category);
+        }
     }
 }

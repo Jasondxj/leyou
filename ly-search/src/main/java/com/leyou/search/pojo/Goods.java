@@ -9,6 +9,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Document(indexName = "goods", type = "docs", shards = 1, replicas = 0)
 @Data
@@ -20,11 +21,11 @@ public class Goods {
     @Field(type = FieldType.Keyword, index = false)
     private String subTitle;// 卖点
     private Long brandId;// 品牌id
-    private Long cd1;// 1级分类id
+    private Long cid1;// 1级分类id
     private Long cid2;// 2级分类id
     private Long cid3;//i 3级分类id
     private Date createTime;// 创建时间
-    private List<Long> price;// 价格
+    private Set<Long> price;// 价格
     @Field(type = FieldType.Keyword, index = false)
     private String skus;// sku信息的json结构
     private Map<String, Object> specs;// 可搜索的规格参数，key是参数名，值是参数值

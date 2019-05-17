@@ -1,6 +1,8 @@
 package com.leyou.item.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import tk.mybatis.mapper.annotation.KeySql;
 
@@ -21,7 +23,6 @@ public class Spu {
     private String title;// 标题
     private String subTitle;// 子标题
     private Boolean saleable;// 是否上架
-    @JsonIgnore
     private Boolean valid;// 是否有效，逻辑删除用
     private Date createTime;// 创建时间
     @JsonIgnore
