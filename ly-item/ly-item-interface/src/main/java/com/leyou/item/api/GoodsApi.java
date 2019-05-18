@@ -13,6 +13,13 @@ import java.util.List;
 
 public interface GoodsApi {
     /**
+     * 根据spu的id查询spu
+     * @param id
+     * @return
+     */
+    @GetMapping("spu/{id}")
+    Spu querySpuById(@PathVariable("id") Long id);
+    /**
      * 根据spuId查询详情
      * @param spuId
      * @return

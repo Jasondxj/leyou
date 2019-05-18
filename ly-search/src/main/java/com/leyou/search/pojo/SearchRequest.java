@@ -14,7 +14,7 @@ public class SearchRequest {
 //    private Boolean descending;
 
     //过滤字段
-//    private Map<String, String> filter;
+    private Map<String, String> filter;
 
 //    public String getSortBy() {
 //        return sortBy;
@@ -56,11 +56,11 @@ public class SearchRequest {
         return DEFAULT_SIZE;
     }
 
-//    public Map<String, String> getFilter() {
-//        return filter;
-//    }
-//
-//    public void setFilter(Map<String, String> filter) {
-//        this.filter = filter;
-//    }
+    public Map<String, String> getFilter() {
+        return filter;
+    }
+
+    public void setFilter(Map<String, String> filter) {
+        this.filter = filter;
+    }
 }

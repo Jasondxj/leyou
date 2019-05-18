@@ -21,11 +21,6 @@ public class SearchResult extends PageResult<Goods> {
 
     public SearchResult(){};
 
-    public SearchResult(Long total, Long totalPage, List<Goods> items, List<Category> categories, List<Brand> brands) {
-        super(total, totalPage, items);
-        this.categories = categories;
-        this.brands = brands;
-    }
 
 
 

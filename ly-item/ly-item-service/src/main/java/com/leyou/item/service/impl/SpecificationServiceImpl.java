@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SpecificationServiceImpl implements ISpecificationService{
@@ -83,6 +86,27 @@ public class SpecificationServiceImpl implements ISpecificationService{
             throw new LyException(ExceptionEnum.SPEC_PARAM_NOT_FOUND);
         }
         return list;
+    }
+
+    @Override
+    public List<SpecGroup> querySpecsByCid(Long cid) {
+        //查询组
+        List<SpecGroup> groups = queryByCid(cid);
+        //查询当前分类下的所有参数
+        List<SpecParam> params = queryParamList(null, cid, null);
+        Map<Long,List<SpecParam>> paramMap=new HashMap<>();
+        for (SpecParam param : params) {
+            if (!paramMap.containsKey(param.getGroupId())){
+                //组id在map中不存在，新增一个list
+                paramMap.put(param.getGroupId(),new ArrayList<>());
+            }
+            paramMap.get(param.getGroupId()).add(param);
+        }
+        //填充param到group中
+        for (SpecGroup group : groups) {
+            group.setParams(paramMap.get(group.getId()));
+        }
+        return groups;
     }
 
 }

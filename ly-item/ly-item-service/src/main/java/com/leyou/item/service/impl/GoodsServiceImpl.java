@@ -199,4 +199,18 @@ public class GoodsServiceImpl implements IGoodsService {
         //新增sku和stock
         saveSkuAndStock(spu);
     }
+
+    @Override
+    public Spu querySpuById(Long id) {
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        if (spu==null){
+            throw new LyException(ExceptionEnum.GOODS_NOT_FOUND);
+        }
+        //查sku
+        List<Sku> skus = querySkuBySpuId(id);
+        spu.setSkus(skus);
+        //查detail
+        spu.setSpuDetail(queryDetailById(id));
+        return spu;
+    }
 }

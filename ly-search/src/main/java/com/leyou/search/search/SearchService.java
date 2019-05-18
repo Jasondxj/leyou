@@ -17,6 +17,7 @@ import com.leyou.search.repository.GoodsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.Aggregation;
@@ -187,7 +188,7 @@ public class SearchService {
         //分页
         queryBuilder.withPageable(PageRequest.of(page, size));
         //过滤
-        QueryBuilder baseQuery= QueryBuilders.matchQuery("all", request.getKey());
+        QueryBuilder baseQuery = buildBasicQuery(request);
         queryBuilder.withQuery(baseQuery);
         //聚合分类和品牌
         //聚合分类
@@ -202,7 +203,7 @@ public class SearchService {
         AggregatedPage<Goods> result = template.queryForPage(queryBuilder.build(), Goods.class);
         //解析结果
         //解析分页结果
-        long totalElements = result.getTotalElements();
+        long total = result.getTotalElements();
         int totalPages = result.getTotalPages();
         List<Goods> goodsList = result.getContent();
         //解析聚合结果
@@ -210,17 +211,37 @@ public class SearchService {
         List<Category> categories = parseCategoryAgg(aggs.get(categoryAggName));
         List<Brand> brands = parseBrandAgg(aggs.get(brandAggName));
         //完成规格参数的聚合
-        List<Map<String,Object>> specs=null;
-        if (categories!=null&&categories.size()==1){
+        List<Map<String, Object>> specs = null;
+        if (categories != null && categories.size() == 1) {
             //分类唯一，可以聚合规格参数
-            specs=buildSpecificationAgg(categories.get(0).getId(),baseQuery);
+            specs = buildSpecificationAgg(categories.get(0).getId(), baseQuery);
         }
-        return new SearchResult(totalElements, (long) totalPages, goodsList, categories, brands,specs);
+        return new SearchResult(total, (long) totalPages, goodsList, categories, brands, specs);
 
     }
 
-    private List<Map<String,Object>> buildSpecificationAgg(Long cid, QueryBuilder baseQuery) {
-        List<Map<String,Object>> specs=new ArrayList<>();
+    private QueryBuilder buildBasicQuery(SearchRequest request) {
+        System.out.println("调用过滤条件方法");
+        //创建bool查询
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        //查询条件
+        queryBuilder.must(QueryBuilders.matchQuery("all", request.getKey()));
+        //过滤条件
+        Map<String, String> map = request.getFilter();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String key = entry.getKey();
+            //处理key
+            if (!"cid3".equals(key) && !"brandId".equals(key)) {
+                key = "specs." + key + ".keyword";
+            }
+            String value=entry.getValue();
+            queryBuilder.filter(QueryBuilders.termQuery(key, value));
+        }
+        return queryBuilder;
+    }
+
+    private List<Map<String, Object>> buildSpecificationAgg(Long cid, QueryBuilder baseQuery) {
+        List<Map<String, Object>> specs = new ArrayList<>();
         //查询需要聚合的规格参数
         List<SpecParam> params = specificationClient.queryParamList(null, cid, true);
         //聚合
@@ -229,7 +250,7 @@ public class SearchService {
         queryBuilder.withQuery(baseQuery);
         for (SpecParam param : params) {
             String name = param.getName();
-            queryBuilder.addAggregation(AggregationBuilders.terms(name).field("specs."+name+".keyword"));
+            queryBuilder.addAggregation(AggregationBuilders.terms(name).field("specs." + name + ".keyword"));
         }
         //获取结果
         AggregatedPage<Goods> result = template.queryForPage(queryBuilder.build(), Goods.class);
@@ -240,9 +261,9 @@ public class SearchService {
             StringTerms terms = aggs.get(name);
             List<String> options = terms.getBuckets().stream().map(b -> b.getKeyAsString()).collect(Collectors.toList());
             //准备map
-            Map<String,Object> map=new HashMap<>();
-            map.put("k",name);
-            map.put("options",options);
+            Map<String, Object> map = new HashMap<>();
+            map.put("k", name);
+            map.put("options", options);
             specs.add(map);
         }
         return specs;
@@ -254,7 +275,7 @@ public class SearchService {
             List<Brand> brands = brandClient.queryByIds(ids);
             return brands;
         } catch (Exception e) {
-            log.error("[查询品牌异常]",e);
+            log.error("[查询品牌异常]", e);
             return null;
         }
     }
@@ -265,7 +286,7 @@ public class SearchService {
             List<Category> categories = categoryClient.queryCategoryByIds(ids);
             return categories;
         } catch (Exception e) {
-            log.error("[查询分类异常]",e);
+            log.error("[查询分类异常]", e);
             return null;
         }
     }

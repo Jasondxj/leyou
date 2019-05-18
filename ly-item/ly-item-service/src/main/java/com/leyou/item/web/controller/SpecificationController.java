@@ -19,6 +19,7 @@ public class SpecificationController {
 
     /**
      * 根据分类id查询规格组
+     *
      * @param cid
      * @return
      */
@@ -29,49 +30,59 @@ public class SpecificationController {
 
     /**
      * 查询参数的集合
+     *
      * @param gid
      * @return
      */
     @GetMapping("params")
     public ResponseEntity<List<SpecParam>> queryParamList(
-            @RequestParam(value = "gid",required = false)Long gid,
-            @RequestParam(value = "cid",required = false)Long cid,
-            @RequestParam(value = "searching",required = false)Boolean searching
-    ){
-        return ResponseEntity.ok(specificationService.queryParamList(gid,cid,searching));
+            @RequestParam(value = "gid", required = false) Long gid,
+            @RequestParam(value = "cid", required = false) Long cid,
+            @RequestParam(value = "searching", required = false) Boolean searching
+    ) {
+        return ResponseEntity.ok(specificationService.queryParamList(gid, cid, searching));
     }
 
     /**
      * 新增规格组
+     *
      * @param cid
      * @param name
      * @return
      */
     @PostMapping("group")
-    public ResponseEntity<Void> addGroup(@RequestParam("cid")Long cid,@RequestParam("name")String name){
-        specificationService.addGroup(name,cid);
+    public ResponseEntity<Void> addGroup(@RequestParam("cid") Long cid, @RequestParam("name") String name) {
+        specificationService.addGroup(name, cid);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
      * 新增规格参数
+     *
      * @param specParam
      * @return
      */
     @PostMapping("param")
-    public ResponseEntity<Void> addParam(SpecParam specParam){
+    public ResponseEntity<Void> addParam(SpecParam specParam) {
         specificationService.addParam(specParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
      * 删除商品规格组
+     *
      * @param id
      * @return
      */
     @DeleteMapping("group/{id}")
-    public ResponseEntity<Void> deleteGroup(@PathVariable("id")Long id){
+    public ResponseEntity<Void> deleteGroup(@PathVariable("id") Long id) {
         specificationService.deleteGroup(id);
         return ResponseEntity.ok().build();
+    }
+
+    // 查询规格参数组，及组内参数
+    @GetMapping("group")
+    public ResponseEntity<List<SpecGroup>> querySpecsByCid(@PathVariable("cid") Long cid) {
+        return ResponseEntity.ok(specificationService.querySpecsByCid(cid));
     }
 }

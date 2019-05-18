@@ -17,4 +17,6 @@ public interface ISpecificationService {
     public void deleteGroup(Long id);
 
     public List<SpecParam> queryParamList(Long gid, Long cid, Boolean searching);
+
+    public List<SpecGroup> querySpecsByCid(Long cid);
 }
