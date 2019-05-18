@@ -12,7 +12,7 @@ import java.util.List;
 public interface SpecificationApi {
     // 查询规格参数组，及组内参数
     @GetMapping("spec/group")
-    List<SpecGroup> querySpecsByCid(@PathVariable("cid") Long cid);
+    List<SpecGroup> querySpecsByCid(@RequestParam("cid") Long cid);
     /**
      * 查询参数的集合
      * @param gid

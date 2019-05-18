@@ -82,7 +82,7 @@ public class SpecificationController {
 
     // 查询规格参数组，及组内参数
     @GetMapping("group")
-    public ResponseEntity<List<SpecGroup>> querySpecsByCid(@PathVariable("cid") Long cid) {
+    public ResponseEntity<List<SpecGroup>> querySpecsByCid(@RequestParam("cid") Long cid) {
         return ResponseEntity.ok(specificationService.querySpecsByCid(cid));
     }
 }
