@@ -294,6 +294,7 @@ public class SearchService {
     public void createOrUpdateIndex(Long spuId) {
         //查询spu
         Spu spu = goodsClient.querySpuById(spuId);
+        Brand brand = brandClient.queryById(spu.getBrandId());
         //构建goods
         Goods goods = buildGoods(spu);
         //存入索引库

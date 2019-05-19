@@ -22,6 +22,7 @@ public class ItemListener {
         if (spuId==null){
             return;
         }
+        System.out.println("**********"+spuId);
         //处理消息，对索引库进行新增或修改
         searchService.createOrUpdateIndex(spuId);
     }
