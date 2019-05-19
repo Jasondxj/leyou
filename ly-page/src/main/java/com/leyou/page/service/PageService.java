@@ -61,6 +61,9 @@ public class PageService {
         context.setVariables(loadModel(spuId));
         //输出流
         File dest = new File("D://test", spuId + ".html");
+        if (dest.exists()){
+            dest.delete();
+        }
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(dest, "utf-8");
@@ -72,5 +75,12 @@ public class PageService {
             log.error("【生成静态页异常】",e);
         }
 
+    }
+
+    public void deleteHtml(Long spuId) {
+        File dest = new File("D://test", spuId + ".html");
+        if (dest.exists()){
+            dest.delete();
+        }
     }
 }
