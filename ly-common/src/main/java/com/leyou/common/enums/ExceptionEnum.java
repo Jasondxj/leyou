@@ -27,7 +27,9 @@ public enum ExceptionEnum {
     GOOD_ID_ERROR(400,"商品ID不能为空" ),
     GOOD_UPDATE_ERROR(500,"新增修改失败" ),
     INVALID_USER_DATA_TYPE(400,"无效的参数类型"),
-    INVALID_VERIFY_CODE(400,"验证码错误");
+    INVALID_VERIFY_CODE(400,"验证码错误"),
+    INVALID_USERNAME_PASSWORD(400,"无效的用户名和密码"),
+    CREATE_TOKEN_ERROR(500,"用户凭证生成失败");
     private int code;
     private String msg;
 }

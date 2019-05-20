@@ -38,6 +38,14 @@ public class UserController {
         userService.sendCode(phone);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    /**
+     * 用户注册
+     * @param user
+     * @param result
+     * @param code
+     * @return
+     */
     @PostMapping("register")
     public ResponseEntity<Void> register(@Valid User user, BindingResult result, @RequestParam("code")String code){
         if (result.hasFieldErrors()){
@@ -46,5 +54,13 @@ public class UserController {
         }
         userService.register(user,code);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    @GetMapping("query")
+    public ResponseEntity<User> queryUserByUsernameAndPassword(
+        @RequestParam("username")String username,
+        @RequestParam("password")String password
+    ){
+        return ResponseEntity.ok(userService.queryUserByUsernameAndPassword(username,password));
+
     }
 }

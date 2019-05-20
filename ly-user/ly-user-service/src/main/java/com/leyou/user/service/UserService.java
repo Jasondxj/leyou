@@ -26,7 +26,7 @@ public class UserService {
     private AmqpTemplate amqpTemplate;
     @Autowired
     private StringRedisTemplate redisTemplate;
-    private static final String KEY_PREFIX="user:verify:phone:";
+    private static final String KEY_PREFIX = "user:verify:phone:";
 
     public Boolean checkData(String data, Integer type) {
         User record = new User();
@@ -46,30 +46,44 @@ public class UserService {
     }
 
     public void sendCode(String phone) {
-        String key=KEY_PREFIX+phone;
+        String key = KEY_PREFIX + phone;
         //生成验证码
-        String code= NumberUtils.generateCode(6);
-        Map<String,String> msg=new HashMap<>();
-        msg.put("phone",phone);
-        msg.put("code",code);
-        amqpTemplate.convertAndSend("ly.sms.exchange","sms.verify.code",msg);
+        String code = NumberUtils.generateCode(6);
+        Map<String, String> msg = new HashMap<>();
+        msg.put("phone", phone);
+        msg.put("code", code);
+        amqpTemplate.convertAndSend("ly.sms.exchange", "sms.verify.code", msg);
         //保存验证码
-        redisTemplate.opsForValue().set(key,code,5, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(key, code, 5, TimeUnit.MINUTES);
     }
 
     public void register(User user, String code) {
         //从redis中取出验证码
         String cacheCode = redisTemplate.opsForValue().get(KEY_PREFIX + user.getPhone());
-        if (!StringUtils.equals(code,cacheCode)){
+        if (!StringUtils.equals(code, cacheCode)) {
             throw new LyException(ExceptionEnum.INVALID_VERIFY_CODE);
         }
         //加密密码
         //生成盐
         String salt = CodecUtils.generateSalt();
         user.setSalt(salt);
-        user.setPassword(CodecUtils.md5Hex(user.getPassword(),salt));
+        user.setPassword(CodecUtils.md5Hex(user.getPassword(), salt));
         user.setCreated(new Date());
         //存入数据库
         userMapper.insert(user);
+    }
+
+    public User queryUserByUsernameAndPassword(String username, String password) {
+        User record = new User();
+        record.setUsername(username);
+        User user = userMapper.selectOne(record);
+        if (user == null) {
+            throw new LyException(ExceptionEnum.INVALID_USERNAME_PASSWORD);
+        }
+        //校验密码
+        if (!StringUtils.equals(user.getPassword(), CodecUtils.md5Hex(password, user.getSalt()))) {
+            throw new LyException(ExceptionEnum.INVALID_USERNAME_PASSWORD);
+        }
+        return user;
     }
 }
