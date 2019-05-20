@@ -25,7 +25,9 @@ public enum ExceptionEnum {
     GOODS_STOCK_NOT_FOUND(500,"商品库存不存在" ),
     GOOD_ADD_ERROR(500,"新增商品失败" ),
     GOOD_ID_ERROR(400,"商品ID不能为空" ),
-    GOOD_UPDATE_ERROR(500,"新增修改失败" );
+    GOOD_UPDATE_ERROR(500,"新增修改失败" ),
+    INVALID_USER_DATA_TYPE(400,"无效的参数类型"),
+    INVALID_VERIFY_CODE(400,"验证码错误");
     private int code;
     private String msg;
 }
