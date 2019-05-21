@@ -52,9 +52,9 @@ mybatis:
 #  not-empty: false
 #  identity: mysql
 ly:
-#  worker:
-#    workerId: 1
-#    datacenterId: 1
+  worker:
+    workerId: 1
+    datacenterId: 1
   jwt:
     pubKeyPath: D:/test/rsa/rsa.pub # 公钥地址
     cookieName: LY_TOKEN

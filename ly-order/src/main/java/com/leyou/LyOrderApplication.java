@@ -11,9 +11,9 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableDiscoveryClient
 @EnableFeignClients
 @MapperScan("com.leyou.order.mapper")
-public class LyOrderService {
+public class LyOrderApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(LyOrderService.class, args);
+        SpringApplication.run(LyOrderApplication.class, args);
     }
 }
