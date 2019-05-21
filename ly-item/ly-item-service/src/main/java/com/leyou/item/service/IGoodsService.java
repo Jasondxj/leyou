@@ -21,4 +21,6 @@ public interface IGoodsService {
     public void updateGood(Spu spu);
 
     Spu querySpuById(Long id);
+
+    public List<Sku> querySkuByIds(List<Long> ids);
 }

@@ -41,6 +41,9 @@ public class AuthController {
     ) {
         //登录
         String token = authService.login(username, password);
+        if (StringUtils.isBlank(token)) {
+            throw new LyException(ExceptionEnum.INVALID_USERNAME_PASSWORD);
+        }
         //将token存入cookie
         CookieUtils.newBuilder(response).httpOnly().request(request).build(prop.getCookieName(),token);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

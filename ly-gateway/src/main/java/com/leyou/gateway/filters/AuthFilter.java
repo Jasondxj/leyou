@@ -17,11 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 
 @Component
 @EnableConfigurationProperties({Jwtproperties.class, FilterProperties.class})
-public class AuthFilter extends ZuulFilter{
+public class AuthFilter extends ZuulFilter {
     @Autowired
     private Jwtproperties prop;
     @Autowired
     private FilterProperties filterProp;
+
     @Override
     public String filterType() {
         return FilterConstants.PRE_TYPE;//过滤器类型，前置过滤
@@ -29,7 +30,7 @@ public class AuthFilter extends ZuulFilter{
 
     @Override
     public int filterOrder() {
-        return FilterConstants.PRE_DECORATION_FILTER_ORDER-1;//过滤器顺序
+        return FilterConstants.PRE_DECORATION_FILTER_ORDER - 1;//过滤器顺序
     }
 
     @Override
@@ -46,7 +47,7 @@ public class AuthFilter extends ZuulFilter{
 
     private boolean isAllowPath(String path) {
         for (String allowPath : filterProp.getAllowPaths()) {
-            if (path.startsWith(allowPath)){
+            if (path.startsWith(allowPath)) {
                 return true;
             }
         }

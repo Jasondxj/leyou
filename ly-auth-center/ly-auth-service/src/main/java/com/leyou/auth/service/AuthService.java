@@ -23,7 +23,9 @@ public class AuthService {
     public String login(String username, String password) {
         //校验用户名和密码
         try {
+            System.out.println("*****");
             User user = userClient.queryUserByUsernameAndPassword(username, password);
+            System.out.println(user+"****");
             if (user==null){
                 throw new LyException(ExceptionEnum.INVALID_USERNAME_PASSWORD);
             }
