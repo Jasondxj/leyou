@@ -11,6 +11,7 @@ import com.leyou.order.client.GoodsClient;
 import com.leyou.order.dto.AddressDto;
 import com.leyou.order.dto.OrderDto;
 import com.leyou.order.enums.OrderStatusEnum;
+import com.leyou.order.enums.PayState;
 import com.leyou.order.interceptors.UserInterceptor;
 import com.leyou.order.mapper.OrderDetailMapper;
 import com.leyou.order.mapper.OrderMapper;
@@ -18,11 +19,13 @@ import com.leyou.order.mapper.OrderStatusMapper;
 import com.leyou.order.pojo.Order;
 import com.leyou.order.pojo.OrderDetail;
 import com.leyou.order.pojo.OrderStatus;
+import com.leyou.order.utils.PlayHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,6 +43,8 @@ public class OrderService {
     private IdWorker idWorker;
     @Autowired
     private GoodsClient goodsClient;
+    @Autowired
+    private PlayHelper playHelper;
 
     @Transactional
     public Long createOrder(OrderDto orderDto) {
@@ -119,5 +124,84 @@ public class OrderService {
         List<CartDto> cartDtos = orderDto.getCarts();
         goodsClient.desreaseStock(cartDtos);
         return orderId;
+    }
+
+    public Order queryOrderById(Long id) {
+        Order order = orderMapper.selectByPrimaryKey(id);
+        if (order == null) {
+            throw new LyException(ExceptionEnum.ORDER_NOT_FOUND);
+        }
+        //查订单详情
+        OrderDetail detail = new OrderDetail();
+        detail.setOrderId(id);
+        List<OrderDetail> details = detailMapper.select(detail);
+        if (CollectionUtils.isEmpty(details)) {
+            throw new LyException(ExceptionEnum.ORDER_DETAIL_NOT_FOUND);
+        }
+        order.setOrderDetails(details);
+        //查订单状态
+        OrderStatus orderStatus = statusMapper.selectByPrimaryKey(id);
+        if (orderStatus == null) {
+            throw new LyException(ExceptionEnum.ORDER_STATUS_NOT_FOUND);
+        }
+        order.setOrderStatus(orderStatus);
+        return order;
+    }
+
+    public String createPayUrl(Long orderId) {
+        Order order = queryOrderById(orderId);
+        //判断订单状态
+        Integer status = order.getOrderStatus().getStatus();
+        if (status != OrderStatusEnum.UN_PAY.value()) {
+            throw new LyException(ExceptionEnum.ORDER_STATUS_ERROR);
+        }
+        Long actualPay = /*order.getActualPay()*/1L;
+        //商品描述
+        OrderDetail detail = order.getOrderDetails().get(0);
+        String desc = detail.getTitle();
+        return playHelper.createOrder(orderId, actualPay, desc);
+    }
+
+    public void handlerResult(Map<String, String> result) {
+        //数据校验
+        playHelper.isSuccess(result);
+        //校验签名
+        playHelper.isValidAign(result);
+        //校验金额
+        String totalFeeStr = result.get("total_fee");
+        String tradeNo = result.get("out_trade_no");
+        if (StringUtils.isEmpty(totalFeeStr) || StringUtils.isEmpty(tradeNo)) {
+            throw new LyException(ExceptionEnum.ORDER_PARAM_ERROR);
+        }
+        //获取结果中的金额
+        long totalPay = Long.valueOf(totalFeeStr);
+        //获取订单中的金额
+        long orderId = Long.valueOf(tradeNo);
+        Order order = orderMapper.selectByPrimaryKey(orderId);
+        Long actualPay = /*order.getActualPay()*/1L;
+        if (totalPay != actualPay) {
+            throw new LyException(ExceptionEnum.ORDER_PARAM_ERROR);
+        }
+        //修改订单状态
+        OrderStatus orderStatus = new OrderStatus();
+        orderStatus.setStatus(OrderStatusEnum.PAYED.value());
+        orderStatus.setOrderId(orderId);
+        orderStatus.setPaymentTime(new Date());
+        int count = statusMapper.updateByPrimaryKeySelective(orderStatus);
+        if (count != 1) {
+            throw new LyException(ExceptionEnum.UPDATE_ORDER_STATUS_ERROR);
+        }
+        log.info("[订单回调]订单支付成功，订单ID:{}", orderId);
+    }
+
+    public PayState queryOrderStatus(Long orderId) {
+        OrderStatus orderStatus = statusMapper.selectByPrimaryKey(orderId);
+        Integer status = orderStatus.getStatus();
+        if (status != OrderStatusEnum.UN_PAY.value()) {
+            //已支付
+            return PayState.SUCCESS;
+        }
+        //如果是未支付，则不一定是未支付，可能是微信回复未收到，去微信查询支付状态
+        return playHelper.queryOrderStatus(orderId);
     }
 }

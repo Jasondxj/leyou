@@ -15,6 +15,6 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new UserInterceptor(prop)).addPathPatterns("/**");
+        registry.addInterceptor(new UserInterceptor(prop)).addPathPatterns("/order/**");
     }
 }
